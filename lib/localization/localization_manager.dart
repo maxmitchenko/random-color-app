@@ -2,8 +2,11 @@ import 'dart:io';
 
 import 'package:random_color_app/utils/strings.dart';
 
+/// [LocalizationManager] contains the methods to get a text depending on
+/// a platform's localization.
 class LocalizationManager {
-  static String getTitle() {
+  // ignore: public_member_api_docs
+  static String getTitleText() {
     final local = Platform.localeName;
     if (local.contains('en')) {
       return 'Random Color App';
@@ -16,13 +19,14 @@ class LocalizationManager {
     return defaultMainTitle;
   }
 
-  static String getButtonText() {
+  // ignore: public_member_api_docs
+  static String getHelloText() {
     final local = Platform.localeName;
     if (local.contains('en')) {
-      return 'Get random color!';
+      return 'Hello there';
     } else {
       if (local.contains('uk')) {
-        return 'Сгенерувати!';
+        return 'Привіт';
       }
     }
 

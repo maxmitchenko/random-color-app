@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:random_color_app/blocs/bloc_provider.dart';
 import 'package:random_color_app/blocs/main_page_bloc.dart';
+import 'package:random_color_app/blocs/main_page_bloc_provider.dart';
 import 'package:random_color_app/localization/localization_manager.dart';
 import 'package:random_color_app/repository/base_color_repository.dart';
 import 'package:random_color_app/repository/color_repository_impl.dart';
 import 'package:random_color_app/view/pages/main_page.dart';
 
+/// The root widget of the app
 class MyApp extends StatefulWidget {
+  // ignore: public_member_api_docs
   const MyApp({super.key});
 
   @override
@@ -14,13 +16,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  late BaseColorRepository _colorRepository;
-
-  @override
-  void initState() {
-    _colorRepository = ColorRepositoryImpl();
-    super.initState();
-  }
+  final BaseColorRepository _colorRepository = ColorRepositoryImpl();
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +25,7 @@ class _MyAppState extends State<MyApp> {
         _colorRepository,
       ),
       child: MaterialApp(
-        title: LocalizationManager.getTitle(),
+        title: LocalizationManager.getTitleText(),
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(
             seedColor: Colors.deepPurple,

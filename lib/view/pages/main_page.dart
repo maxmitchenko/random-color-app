@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:random_color_app/blocs/bloc_provider.dart';
 import 'package:random_color_app/blocs/main_page_bloc.dart';
+import 'package:random_color_app/blocs/main_page_bloc_provider.dart';
 import 'package:random_color_app/localization/localization_manager.dart';
 import 'package:random_color_app/utils/colors.dart';
+import 'package:random_color_app/utils/extensions/text_style_theme_extension.dart';
 
+/// The main and actually the only page in the app.
+/// Contains a simple text and a colorful background that changes its color
+/// when user clicks on a screen.
 class MainPage extends StatefulWidget {
+  // ignore: public_member_api_docs
   const MainPage({super.key});
 
   @override
@@ -12,7 +17,34 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  late MainPageBloc _bloc;
+  MainPageBloc? _bloc;
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<Color>(
+      stream: _bloc?.colorStream,
+      builder: (innerContext, snapshot) {
+        Color? backgroundColor;
+        backgroundColor = !snapshot.hasData || snapshot.data == null
+            ? defaultBackgroundColor
+            : snapshot.data;
+
+        return Scaffold(
+          backgroundColor: backgroundColor,
+          body: GestureDetector(
+            behavior: HitTestBehavior.translucent,
+            onTap: () => _bloc?.changeColor(),
+            child: Center(
+              child: Text(
+                LocalizationManager.getHelloText(),
+                style: Theme.of(context).textTheme.baseTextStyle,
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
 
   @override
   void didChangeDependencies() {
@@ -22,38 +54,7 @@ class _MainPageState extends State<MainPage> {
 
   @override
   void dispose() {
-    _bloc.close();
+    _bloc?.close();
     super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return StreamBuilder<Color>(
-      stream: _bloc.colorStream,
-      builder: (innerContext, snapshot) {
-        Color? backgroundColor;
-        if (!snapshot.hasData || snapshot.data == null) {
-          backgroundColor = defaultBackgroundColor;
-        } else {
-          backgroundColor = snapshot.data;
-        }
-        return Scaffold(
-          appBar: AppBar(
-            title: Text(
-              LocalizationManager.getTitle(),
-            ),
-          ),
-          backgroundColor: backgroundColor,
-          body: Center(
-            child: ElevatedButton(
-              onPressed: () => _bloc.changeColor(),
-              child: Text(
-                LocalizationManager.getButtonText(),
-              ),
-            ),
-          ),
-        );
-      },
-    );
   }
 }
